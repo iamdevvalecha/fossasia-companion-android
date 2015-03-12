@@ -203,6 +203,13 @@ public class FossasiaEventDetailsFragment extends Fragment {
         String startTime = event.getStartTime();
         text = String.format("%1$s, %2$s", event.getDay(), (startTime != null) ? startTime : "?");
         ((TextView) view.findViewById(R.id.time)).setText(text);
+        TextView moderator = (TextView)view.findViewById(R.id.moderators);
+        if(event.getModerator() == null || event.getModerator().equals("")) {
+            moderator.setVisibility(View.GONE);
+        }
+        else {
+            moderator.setText("Moderator: " + event.getModerator());
+        }
         final String venue = event.getVenue();
         TextView roomTextView = (TextView) view.findViewById(R.id.room);
         Spannable roomText = new SpannableString(String.format("%1$s", venue));

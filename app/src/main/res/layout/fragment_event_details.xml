@@ -39,6 +39,15 @@
                 android:layout_marginTop="8dp"
                 tools:text="FOSDEM Staff"/>
 
+            <TextView
+                android:id="@+id/moderators"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                tools:text="FOSDEM Moderator"/>
+
+
             <View
                 style="@style/SeparatorLine"
                 android:layout_marginTop="8dp"/>

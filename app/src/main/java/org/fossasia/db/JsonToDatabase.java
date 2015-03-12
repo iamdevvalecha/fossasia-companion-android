@@ -181,6 +181,7 @@ public class JsonToDatabase {
                 String url;
                 String fullName;
                 String linkedIn;
+                String moderator;
 
 
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -215,6 +216,8 @@ public class JsonToDatabase {
                                 .getString("v");
                         linkedIn = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(Constants.LINKEDIN)
                                 .getString("v");
+                        moderator = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(Constants.MODERATOR)
+                                .getString("v");
                         String logData = "First Name: %s\nLast Name: %s\nDate: %s\nTime: %s\nOrganization: %s\nEmail: %s\nBlog: %s\nTwitter: %s\nType Of Proposal: %s\nTopic Name:%s\nTrack: %s\nAbstarct: %s\nDescription: %s\nURL: %s";
                         logData = String.format(logData, firstName, lastName, date, time, organization, email, blog, twitter, typeOfProposal, topicName, field, proposalAbstract, description, url);
 //                        Log.d(TAG, logData);
@@ -225,7 +228,7 @@ public class JsonToDatabase {
                         String[] dayDate = date.split(" ");
                         day = dayDate[0];
                         date = dayDate[1] + " " + dayDate[2];
-                        FossasiaEvent temp = new FossasiaEvent(id2, topicName, field, date, day, time, proposalAbstract, description, venue, forceTrack);
+                        FossasiaEvent temp = new FossasiaEvent(id2, topicName, field, date, day, time, proposalAbstract, description, venue, forceTrack, moderator);
 
 
                         fullName = firstName + " " + lastName;

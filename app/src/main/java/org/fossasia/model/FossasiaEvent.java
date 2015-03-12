@@ -38,8 +38,9 @@ public class FossasiaEvent implements Parcelable {
     private String description;
     private String venue;
     private String track;
+    private String moderator;
 
-    public FossasiaEvent(int id, String title, String subTitle, ArrayList<String> keyNoteList, String date, String day, String startTime, String abstractText, String description, String venue, String track) {
+    public FossasiaEvent(int id, String title, String subTitle, ArrayList<String> keyNoteList, String date, String day, String startTime, String abstractText, String description, String venue, String track, String moderator) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
@@ -51,9 +52,10 @@ public class FossasiaEvent implements Parcelable {
         this.description = description;
         this.venue = venue;
         this.track = track;
+        this.moderator = moderator;
     }
 
-    public FossasiaEvent(int id, String title, String subTitle, String date, String day, String startTime, String abstractText, String description, String venue, String track) {
+    public FossasiaEvent(int id, String title, String subTitle, String date, String day, String startTime, String abstractText, String description, String venue, String track, String moderator) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
@@ -65,6 +67,8 @@ public class FossasiaEvent implements Parcelable {
         this.venue = venue;
         this.keyNoteList = new ArrayList<String>();
         this.track = track;
+        this.moderator = moderator;
+
     }
 
     public FossasiaEvent(Parcel in) {
@@ -78,6 +82,7 @@ public class FossasiaEvent implements Parcelable {
         this.description = in.readString();
         this.venue = in.readString();
         this.track = in.readString();
+        this.moderator = in.readString();
         this.keyNoteList = in.readArrayList(String.class.getClassLoader());
 
     }
@@ -170,6 +175,14 @@ public class FossasiaEvent implements Parcelable {
         this.track = track;
     }
 
+    public String getModerator() {
+        return moderator;
+    }
+
+    public void setModerator(String moderator) {
+        this.moderator = moderator;
+    }
+
     public String getPersonSummary() {
         // TODO: Make a comma separated list of all the speakers from KeyNoteList
         if (keyNoteList.size() > 0) {
@@ -187,7 +200,7 @@ public class FossasiaEvent implements Parcelable {
 
     public String generateSqlQuery() {
 
-        String query = String.format("INSERT INTO %s VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", DatabaseHelper.TABLE_NAME_SCHEDULE, id, StringUtils.replaceUnicode(title), StringUtils.replaceUnicode(subTitle), StringUtils.replaceUnicode(date), StringUtils.replaceUnicode(day), StringUtils.replaceUnicode(startTime), StringUtils.replaceUnicode(abstractText), StringUtils.replaceUnicode(description), StringUtils.replaceUnicode(venue), StringUtils.replaceUnicode(track));
+        String query = String.format("INSERT INTO %s VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", DatabaseHelper.TABLE_NAME_SCHEDULE, id, StringUtils.replaceUnicode(title), StringUtils.replaceUnicode(subTitle), StringUtils.replaceUnicode(date), StringUtils.replaceUnicode(day), StringUtils.replaceUnicode(startTime), StringUtils.replaceUnicode(abstractText), StringUtils.replaceUnicode(description), StringUtils.replaceUnicode(venue), StringUtils.replaceUnicode(track), StringUtils.replaceUnicode(moderator));
         return query;
     }
 
@@ -208,6 +221,7 @@ public class FossasiaEvent implements Parcelable {
         out.writeString(description);
         out.writeString(venue);
         out.writeString(track);
+        out.writeString(moderator);
         out.writeList(keyNoteList);
 
     }

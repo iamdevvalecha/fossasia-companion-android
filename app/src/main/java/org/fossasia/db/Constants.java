@@ -20,6 +20,7 @@ public class Constants {
     public final static int DESCRIPTION = 21;
     public final static int URL = 22;
     public final static int LINKEDIN = 23;
+    public final static int MODERATOR = 24;
 
 
 }

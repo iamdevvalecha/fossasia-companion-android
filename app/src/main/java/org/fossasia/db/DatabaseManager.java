@@ -193,6 +193,7 @@ public class DatabaseManager {
         String description;
         String venue;
         String track;
+        String moderator;
         if (cursor.moveToFirst()) {
             do {
                 id = cursor.getInt(0);
@@ -205,6 +206,7 @@ public class DatabaseManager {
                 description = cursor.getString(7);
                 venue = cursor.getString(8);
                 track = cursor.getString(9);
+                moderator = cursor.getString(10);
                 Cursor cursorSpeaker = helper.getReadableDatabase().rawQuery(String.format("SELECT speaker FROM %s WHERE event_id=%d", DatabaseHelper.TABLE_NAME_SPEAKER_EVENT_RELATION, id), null);
                 ArrayList<String> speakers = new ArrayList<String>();
                 if (cursorSpeaker.moveToFirst()) {
@@ -214,7 +216,7 @@ public class DatabaseManager {
                     while (cursorSpeaker.moveToNext());
                 }
 
-                temp = new FossasiaEvent(id, title, subTitle, speakers, date, day, date + " " + startTime, abstractText, description, venue, track);
+                temp = new FossasiaEvent(id, title, subTitle, speakers, date, day, date + " " + startTime, abstractText, description, venue, track, moderator);
             }
             while (cursor.moveToNext());
         }
@@ -237,6 +239,7 @@ public class DatabaseManager {
         String description;
         String venue;
         String track;
+        String moderator;
         if (cursor.moveToFirst()) {
             do {
                 id = cursor.getInt(0);
@@ -249,6 +252,7 @@ public class DatabaseManager {
                 description = cursor.getString(7);
                 venue = cursor.getString(8);
                 track = cursor.getString(9);
+                moderator = cursor.getString(10);
                 Cursor cursorSpeaker = helper.getReadableDatabase().rawQuery(String.format("SELECT speaker FROM %s WHERE event_id=%d", DatabaseHelper.TABLE_NAME_SPEAKER_EVENT_RELATION, id), null);
                 ArrayList<String> speakers = new ArrayList<String>();
                 if (cursorSpeaker.moveToFirst()) {
@@ -258,7 +262,7 @@ public class DatabaseManager {
                     while (cursorSpeaker.moveToNext());
                 }
 
-                fossasiaEventList.add(new FossasiaEvent(id, title, subTitle, speakers, date, day, startTime, abstractText, description, venue, track));
+                fossasiaEventList.add(new FossasiaEvent(id, title, subTitle, speakers, date, day, startTime, abstractText, description, venue, track, moderator));
             }
             while (cursor.moveToNext());
         }
@@ -292,6 +296,7 @@ public class DatabaseManager {
             String description;
             String venue;
             String track;
+            String moderator;
             if (cursor.moveToFirst()) {
                 do {
                     id = cursor.getInt(0);
@@ -304,6 +309,7 @@ public class DatabaseManager {
                     description = cursor.getString(7);
                     venue = cursor.getString(8);
                     track = cursor.getString(9);
+                    moderator = cursor.getString(10);
                     Cursor cursorSpeaker = helper.getReadableDatabase().rawQuery(String.format("SELECT speaker FROM %s WHERE event_id=%d", DatabaseHelper.TABLE_NAME_SPEAKER_EVENT_RELATION, id), null);
                     ArrayList<String> speakers = new ArrayList<String>();
                     if (cursorSpeaker.moveToFirst()) {
@@ -313,7 +319,7 @@ public class DatabaseManager {
                         while (cursorSpeaker.moveToNext());
                     }
 
-                    fossasiaEventList.add(new FossasiaEvent(id, title, subTitle, speakers, date, day, date + " " + startTime, abstractText, description, venue, track));
+                    fossasiaEventList.add(new FossasiaEvent(id, title, subTitle, speakers, date, day, date + " " + startTime, abstractText, description, venue, track, moderator));
                 }
                 while (cursor.moveToNext());
             }
@@ -335,6 +341,7 @@ public class DatabaseManager {
         String abstractText;
         String description;
         String venue;
+        String moderator;
         if (cursor.moveToFirst()) {
             do {
                 id = cursor.getInt(0);
@@ -347,6 +354,8 @@ public class DatabaseManager {
                 description = cursor.getString(7);
                 venue = cursor.getString(8);
                 track = cursor.getString(9);
+                moderator = cursor.getString(10);
+
                 Cursor cursorSpeaker = helper.getReadableDatabase().rawQuery(String.format("SELECT speaker FROM %s WHERE event_id=%d", DatabaseHelper.TABLE_NAME_SPEAKER_EVENT_RELATION, id), null);
                 ArrayList<String> speakers = new ArrayList<String>();
                 if (cursorSpeaker.moveToFirst()) {
@@ -356,7 +365,7 @@ public class DatabaseManager {
                     while (cursorSpeaker.moveToNext());
                 }
 
-                fossasiaEventList.add(new FossasiaEvent(id, title, subTitle, speakers, date, day, startTime, abstractText, description, venue, track));
+                fossasiaEventList.add(new FossasiaEvent(id, title, subTitle, speakers, date, day, startTime, abstractText, description, venue, track, moderator));
             }
             while (cursor.moveToNext());
         }
