@@ -98,12 +98,6 @@
             android:text="Map"
             android:layout_marginBottom="@dimen/venue_attribute_margin_bottom"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/VenueAttributeTextView"
-            android:text="Map"
-            android:layout_marginBottom="@dimen/venue_attribute_margin_bottom"/>
 
         <TextView
             android:id="@+id/venue_map"
