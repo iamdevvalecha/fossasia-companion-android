@@ -12,6 +12,7 @@ import com.android.volley.toolbox.StringRequest;
 import org.fossasia.api.FossasiaUrls;
 import org.fossasia.model.FossasiaEvent;
 import org.fossasia.model.Speaker;
+import org.fossasia.model.Venue;
 import org.fossasia.utils.StringUtils;
 import org.fossasia.utils.VolleySingleton;
 import org.json.JSONArray;
@@ -77,9 +78,16 @@ public class JsonToDatabase {
                 String name;
                 String url;
                 String venue;
+                String address;
+                String howToReach;
+                String link;
+                String room;
+
                 String mapLocation;
                 String version;
                 String forceTrack;
+                Venue temp;
+
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     try {
@@ -89,13 +97,27 @@ public class JsonToDatabase {
                                 .getString("f");
                         venue = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(2)
                                 .getString("v");
+                        room = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(3)
+                                .getString("v");
+                        link = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(4)
+                                .getString("v");
+                        address = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(6)
+                                .getString("v");
+                        howToReach = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(7)
+                                .getString("v");
+
                         version = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(8)
                                 .getString("v");
+
                         mapLocation = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(5)
                                 .getString("v");
                         String query = "INSERT INTO %s VALUES (%d, '%s', '%s', '%s');";
                         query = String.format(query, DatabaseHelper.TABLE_NAME_TRACK_VENUE, i, name, venue, mapLocation);
                         queries.add(query);
+
+                        temp = new Venue(name, venue, mapLocation, room, link, address, howToReach);
+                        //Generate query
+                        queries.add(temp.generateSql());
 
                         Log.d(TAG, name);
 

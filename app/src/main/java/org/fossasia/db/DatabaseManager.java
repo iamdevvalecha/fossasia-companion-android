@@ -17,6 +17,7 @@ import org.fossasia.model.Day;
 import org.fossasia.model.FossasiaEvent;
 import org.fossasia.model.Person;
 import org.fossasia.model.Speaker;
+import org.fossasia.model.Venue;
 import org.fossasia.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -98,7 +99,7 @@ public class DatabaseManager {
 
         ArrayList<FossasiaEvent> bookmarkedEvents = new ArrayList<>();
         Cursor cursor = helper.getReadableDatabase().rawQuery("SELECT * FROM " + DatabaseHelper.BOOKMARKS_TABLE_NAME, null);
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 bookmarkedEvents.add(getEventById(cursor.getInt(0)));
             }
@@ -169,12 +170,12 @@ public class DatabaseManager {
         String query = "SELECT date FROM schedule WHERE track='%s' GROUP BY date";
         Cursor cursor = helper.getReadableDatabase().rawQuery(String.format(query, track), null);
         int count = 0;
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 days.add(new Day(count, cursor.getString(0)));
                 count++;
             }
-            while(cursor.moveToNext());
+            while (cursor.moveToNext());
         }
         cursor.close();
         return days;
@@ -182,7 +183,7 @@ public class DatabaseManager {
 
     public FossasiaEvent getEventById(int id) {
         FossasiaEvent temp = null;
-        Cursor cursor = helper.getReadableDatabase().rawQuery("SELECT * FROM schedule WHERE id=" + id , null);
+        Cursor cursor = helper.getReadableDatabase().rawQuery("SELECT * FROM schedule WHERE id=" + id, null);
         String title;
         String subTitle;
         String date;
@@ -213,7 +214,7 @@ public class DatabaseManager {
                     while (cursorSpeaker.moveToNext());
                 }
 
-                temp = new FossasiaEvent(id, title, subTitle, speakers, date, day, date + " " +startTime, abstractText, description, venue, track);
+                temp = new FossasiaEvent(id, title, subTitle, speakers, date, day, date + " " + startTime, abstractText, description, venue, track);
             }
             while (cursor.moveToNext());
         }
@@ -557,7 +558,7 @@ public class DatabaseManager {
     public String getTrackMapUrl(String track) {
         Cursor cursor = helper.getReadableDatabase().rawQuery(String.format("SELECT map FROM %s WHERE track='%s'", DatabaseHelper.TABLE_NAME_TRACK_VENUE, track), null);
         String map = "htttp://maps.google.com/";
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             map = cursor.getString(0);
         }
         cursor.close();
@@ -645,4 +646,20 @@ public class DatabaseManager {
         }
     }
 
+    public Venue getVenueFromTrack(String track) {
+        String query = "SELECT * FROM %s WHERE track='%s'";
+        Venue ven = null;
+        Cursor cursor = helper.getReadableDatabase().rawQuery(String.format(query, DatabaseHelper.TABLE_NAME_VENUE, track), null);
+        if (cursor.moveToFirst()) {
+            //tract TEXT, venue TEXT, map TEXT, room TEXT, link TEXT, address TEXT, how_to_reach TEXT        }
+            String venue = cursor.getString(1);
+            String map = cursor.getString(2);
+            String room = cursor.getString(3);
+            String link = cursor.getString(4);
+            String address = cursor.getString(5);
+            String howToReach = cursor.getString(6);
+            ven = new Venue(track, venue, map, room, link, address, howToReach);
+        }
+        return ven;
+    }
 }

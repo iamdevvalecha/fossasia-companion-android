@@ -37,7 +37,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_TRACK_VENUE = "CREATE TABLE " + TABLE_NAME_TRACK_VENUE
             + " (id INTEGER, track TEXT, venue TEXT, map TEXT);";
 
-    private static final String DATABASE_NAME = "fosdem.sqlite2";
+    public static final String TABLE_NAME_VENUE = "venue";
+    private static final String TABLE_VENUE = "CREATE TABLE " + TABLE_NAME_VENUE
+            + " (track TEXT, venue TEXT, map TEXT, room TEXT, link TEXT, address TEXT, how_to_reach TEXT);";
+
+    private static final String DATABASE_NAME = "fosdem.sqlite4";
     private static final int DATABASE_VERSION = 1;
 
 
@@ -86,6 +90,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.execSQL(TABLE_SPEAKER_EVENT_RELATION);
         database.execSQL(TABLE_TRACKS);
         database.execSQL(TABLE_TRACK_VENUE);
+        database.execSQL(TABLE_VENUE);
     }
 
     @Override

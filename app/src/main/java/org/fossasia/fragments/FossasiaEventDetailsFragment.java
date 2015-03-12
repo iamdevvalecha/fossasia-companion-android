@@ -3,7 +3,6 @@ package org.fossasia.fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -25,14 +24,12 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +41,7 @@ import org.fossasia.loaders.LocalCacheLoader;
 import org.fossasia.model.FossasiaEvent;
 import org.fossasia.model.Link;
 import org.fossasia.model.Speaker;
+import org.fossasia.model.Venue;
 import org.fossasia.utils.DateUtils;
 import org.fossasia.utils.StringUtils;
 
@@ -185,7 +183,7 @@ public class FossasiaEventDetailsFragment extends Fragment {
             textView.setText(text);
         }
 
-        MovementMethod linkMovementMethod = LinkMovementMethod.getInstance();
+        final MovementMethod linkMovementMethod = LinkMovementMethod.getInstance();
 
         // Set the persons summary text first; replace it with the clickable text when the loader completes
         holder.personsTextView = (TextView) view.findViewById(R.id.persons);
@@ -219,6 +217,8 @@ public class FossasiaEventDetailsFragment extends Fragment {
             public void onClick(View view) {
 
                 final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                DatabaseManager db = DatabaseManager.getInstance();
+                final Venue ven = db.getVenueFromTrack(event.getTrack());
                 LayoutInflater inflater = (LayoutInflater) getActivity()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View dialogView = inflater.inflate(R.layout.venue_dialog, null);
@@ -229,11 +229,20 @@ public class FossasiaEventDetailsFragment extends Fragment {
                 TextView mapLink = (TextView) dialogView.findViewById(R.id.venue_map);
                 TextView venueLink = (TextView) dialogView.findViewById(R.id.venue_link);
                 TextView venueName = (TextView) dialogView.findViewById(R.id.venue_name);
-                venueName.setText(event.getVenue());
+                TextView venueAddress = (TextView) dialogView.findViewById(R.id.venue_address);
+                venueAddress.setText(ven.getAddress());
+                TextView venueRoom = (TextView) dialogView.findViewById(R.id.venue_room);
+                venueRoom.setText(ven.getRoom());
+                TextView howToReach = (TextView) dialogView.findViewById(R.id.venue_how_to_reach);
+                howToReach.setText(ven.getHowToReach());
+
+                venueName.setText(ven.getVenue());
+                venueLink.setText(ven.getLink());
                 venueLink.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity(),"Didn't have the data.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ven.getLink()));
+                        startActivity(intent);
                     }
                 });
                 mapLink.setOnClickListener(new View.OnClickListener() {
@@ -249,6 +258,7 @@ public class FossasiaEventDetailsFragment extends Fragment {
                         dialog.dismiss();
                     }
                 });
+
                 dialog.show();
             }
         });
