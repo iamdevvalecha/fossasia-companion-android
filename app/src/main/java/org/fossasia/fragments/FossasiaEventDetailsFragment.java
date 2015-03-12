@@ -2,6 +2,8 @@ package org.fossasia.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -23,12 +25,14 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -208,14 +212,44 @@ public class FossasiaEventDetailsFragment extends Fragment {
         // If the room image exists, make the room text clickable to display it
         roomText.setSpan(new UnderlineSpan(), 0, roomText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         final String map = getArguments().getString("MAP");
+
         roomTextView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
-
-                startActivity(intent);
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = (LayoutInflater) getActivity()
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialogView = inflater.inflate(R.layout.venue_dialog, null);
+                alertDialogBuilder.setView(dialogView);
+                final AlertDialog dialog = alertDialogBuilder.create();
+                dialog.getWindow().setWindowAnimations(R.style.VenueDialogAnimation);
+                TextView ok = (TextView) dialogView.findViewById(R.id.venue_okay);
+                TextView mapLink = (TextView) dialogView.findViewById(R.id.venue_map);
+                TextView venueLink = (TextView) dialogView.findViewById(R.id.venue_link);
+                TextView venueName = (TextView) dialogView.findViewById(R.id.venue_name);
+                venueName.setText(event.getVenue());
+                venueLink.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity(),"Didn't have the data.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                mapLink.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
+                        startActivity(intent);
+                    }
+                });
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
             }
         });
         roomTextView.setFocusable(true);
