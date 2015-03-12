@@ -54,8 +54,6 @@ public class ScheduleFragment extends Fragment {
             staticDays.add(new Day(2, "March 15"));
 
 
-
-
             daysAdapter = new DayLoader(getChildFragmentManager(), track, staticDays);
         }
 
@@ -65,24 +63,25 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        DatabaseManager db = DatabaseManager.getInstance();
-        String track = getArguments().getString("TRACK");
-        ArrayList<Day> days = db.getDates(track);
-        String subTitle = "";
-        for(Day day : days) {
-            if(days.indexOf(day) != 0) {
-                subTitle += ", ";
-            }
-            subTitle += day.getDate();
 
-        }
-        ((ActionBarActivity)getActivity()).getSupportActionBar().setSubtitle(subTitle);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
+        DatabaseManager db = DatabaseManager.getInstance();
+        String track = getArguments().getString("TRACK");
+        ArrayList<Day> days = db.getDates(track);
 
+        String subTitle = "";
+        for (Day day : days) {
+            if (days.indexOf(day) != 0) {
+                subTitle += ", ";
+            }
+            subTitle += day.getDate();
+
+        }
+        ((ActionBarActivity) getActivity()).getSupportActionBar().setSubtitle(subTitle);
         holder = new ViewHolder();
         holder.contentView = view.findViewById(R.id.content);
         holder.emptyView = view.findViewById(android.R.id.empty);
@@ -94,6 +93,11 @@ public class ScheduleFragment extends Fragment {
             holder.pager.setAdapter(daysAdapter);
         }
         holder.slidingTabs.setViewPager(holder.pager);
+        if (days.size() > 0) {
+            String[] date = days.get(0).getDate().split(" ");
+            int position = Integer.parseInt(date[1]) - 13;
+            holder.pager.setCurrentItem(position);
+        }
 
         return view;
     }
@@ -103,7 +107,6 @@ public class ScheduleFragment extends Fragment {
         super.onDestroyView();
         holder = null;
     }
-
 
 
     @Override
@@ -162,5 +165,7 @@ public class ScheduleFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             return days.get(position).getDate();
         }
+
+
     }
 }
