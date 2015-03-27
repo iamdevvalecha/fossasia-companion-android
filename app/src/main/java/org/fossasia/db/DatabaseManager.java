@@ -17,6 +17,7 @@ import org.fossasia.model.Day;
 import org.fossasia.model.FossasiaEvent;
 import org.fossasia.model.Person;
 import org.fossasia.model.Speaker;
+import org.fossasia.model.Sponsor;
 import org.fossasia.model.Venue;
 import org.fossasia.utils.StringUtils;
 
@@ -92,6 +93,7 @@ public class DatabaseManager {
         db.delete(DatabaseHelper.TABLE_NAME_SCHEDULE, null, null);
         db.delete(DatabaseHelper.TABLE_NAME_SPEAKER_EVENT_RELATION, null, null);
         db.delete(DatabaseHelper.TABLE_NAME_TRACK, null, null);
+        db.delete(DatabaseHelper.TABLE_NAME_SPONSOR, null, null);
 
     }
 
@@ -415,6 +417,29 @@ public class DatabaseManager {
         return cursor;
     }
 
+    public ArrayList<Sponsor> getSponsors() {
+
+        Cursor cursor = helper.getReadableDatabase().query(DatabaseHelper.TABLE_NAME_SPONSOR, null, null, null, null, null, null);
+        ArrayList<Sponsor> sponsors = new ArrayList<Sponsor>();
+        int id;
+        String name;
+        String img;
+        String url;
+
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getInt(0);
+                name = cursor.getString(1);
+                img = cursor.getString(2);
+                url = cursor.getString(3);
+                sponsors.add(new Sponsor(id, name, img, url));
+            }
+            while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return sponsors;
+    }
 
     /**
      * Returns the bookmarks.
