@@ -18,6 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_KEY_SPEAKERS = "CREATE TABLE " + TABLE_NAME_KEY_SPEAKERS
             + " (id INTEGER PRIMARY KEY, name TEXT, designation TEXT, information TEXT, twitter_handle TEXT,"
             + " linkedin_url TEXT, profile_pic_url TEXT, is_key_speaker INTEGER, UNIQUE(name));";
+    public static final String TABLE_NAME_SPONSOR = "sponsors";
     public static final String TABLE_NAME_SCHEDULE = "schedule";
 
     private static final String TABLE_SCHEDULE = "CREATE TABLE " + TABLE_NAME_SCHEDULE
@@ -63,6 +64,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.execSQL("CREATE INDEX event_track_id_idx ON " + EVENTS_TABLE_NAME + " (track_id)");
         // Secondary table with fulltext index on the titles
         database.execSQL("CREATE VIRTUAL TABLE " + EVENTS_TITLES_TABLE_NAME + " USING fts3(title TEXT, subtitle TEXT);");
+
+        //SPONSORS
+        database.execSQL("CREATE TABLE " + TABLE_NAME_SPONSOR
+                + " (id INTEGER , name TEXT, img TEXT, url TEXT);");
 
         // Persons
         database.execSQL("CREATE VIRTUAL TABLE " + PERSONS_TABLE_NAME + " USING fts3(name TEXT);");

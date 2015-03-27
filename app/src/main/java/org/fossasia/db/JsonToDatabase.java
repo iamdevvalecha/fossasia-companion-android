@@ -12,6 +12,7 @@ import com.android.volley.toolbox.StringRequest;
 import org.fossasia.api.FossasiaUrls;
 import org.fossasia.model.FossasiaEvent;
 import org.fossasia.model.Speaker;
+import org.fossasia.model.Sponsor;
 import org.fossasia.model.Venue;
 import org.fossasia.utils.StringUtils;
 import org.fossasia.utils.VolleySingleton;
@@ -29,9 +30,6 @@ public class JsonToDatabase {
     private final static String TAG = "JSON_TO_DATABASE";
 
     private Context context;
-//    private boolean keySpeakerLoaded;
-//    private boolean scheduleLoaded;
-//    private boolean speakerEventRelation;
     private boolean tracks;
     private ArrayList<String> queries;
     private JsonToDatabaseCallback mCallback;
@@ -40,11 +38,7 @@ public class JsonToDatabase {
     public JsonToDatabase(Context context) {
         count = 0;
         this.context = context;
-//        this.keySpeakerLoaded = false;
         queries = new ArrayList<String>();
-//        keySpeakerLoaded = false;
-//        scheduleLoaded = true;
-//        speakerEventRelation = false;
         tracks = false;
 
 
@@ -56,11 +50,57 @@ public class JsonToDatabase {
 
 
     public void startDataDownload() {
-//        fetchKeySpeakers(FossasiaUrls.KEY_SPEAKER_URL);
-//        fetchSchedule(FossasiaUrls.SCHEDULE_URL);
-//        fetchSpeakerEventRelation(FossasiaUrls.SPEAKER_EVENT_URL);
         fetchTracks(FossasiaUrls.TRACKS_URL);
         startTrackUrlFetch(FossasiaUrls.VERSION_TRACK_URL);
+        SponsorUrl(FossasiaUrls.SPONSOR_URL);
+
+    }
+
+    private void SponsorUrl(final String sponsorUrl) {
+        RequestQueue queue = VolleySingleton.getReqQueue(context);
+
+        //Request string reponse from the url
+
+        StringRequest stringRequest = new StringRequest(sponsorUrl, new Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray jsonArray1 = removePaddingFromString(response);
+                String name;
+                String img;
+                String url;
+                Sponsor temp;
+
+                for (int i=0;i<jsonArray1.length();i++){
+
+                    try{
+                        name = jsonArray1.getJSONObject(i).getJSONArray("c").getJSONObject(0).getString("v");
+                        img = jsonArray1.getJSONObject(i).getJSONArray("c").getJSONObject(1).getString("v");
+                        url = jsonArray1.getJSONObject(i).getJSONArray("c").getJSONObject(2).getString("v");
+
+                        temp = new Sponsor((i+1),name,img,url);
+                        String ab = temp.generatesql();
+                        queries.add(ab);
+                        Log.d(TAG,ab);
+                    }
+                    catch ( JSONException e){
+
+                       // Log.e(TAG, "JSON error: " + e.getMessage() + "\nResponse: " + response);
+
+                    }
+                }
+            }
+        }
+                , new ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+              //  Log.d(TAG, "VOLLEY ERROR :" + error.getMessage());
+
+            }
+        }
+
+        );
+        queue.add(stringRequest);
     }
 
     private void startTrackUrlFetch(String url) {
@@ -74,7 +114,7 @@ public class JsonToDatabase {
             @Override
             public void onResponse(String response) {
                 JSONArray jsonArray = removePaddingFromString(response);
-                Log.d(TAG, jsonArray.toString());
+                //Log.d(TAG, jsonArray.toString());
                 String name;
                 String url;
                 String venue;
@@ -119,13 +159,13 @@ public class JsonToDatabase {
                         //Generate query
                         queries.add(temp.generateSql());
 
-                        Log.d(TAG, name);
+                       // Log.d(TAG, name);
 
                         fetchData(FossasiaUrls.PART_URL + url, venue, name, (i + 50) * 100);
 
 
                     } catch (JSONException e) {
-                        Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
+                      //  Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
                     }
 
                 }
@@ -162,7 +202,7 @@ public class JsonToDatabase {
             @Override
             public void onResponse(String response) {
                 JSONArray jsonArray = removePaddingFromString(response);
-                Log.d(TAG, jsonArray.toString());
+               // Log.d(TAG, jsonArray.toString());
 
                 String firstName;
                 String lastName;
@@ -219,7 +259,7 @@ public class JsonToDatabase {
                         moderator = jsonArray.getJSONObject(i).getJSONArray("c").getJSONObject(Constants.MODERATOR)
                                 .getString("v");
                         String logData = "First Name: %s\nLast Name: %s\nDate: %s\nTime: %s\nOrganization: %s\nEmail: %s\nBlog: %s\nTwitter: %s\nType Of Proposal: %s\nTopic Name:%s\nTrack: %s\nAbstarct: %s\nDescription: %s\nURL: %s";
-                        logData = String.format(logData, firstName, lastName, date, time, organization, email, blog, twitter, typeOfProposal, topicName, field, proposalAbstract, description, url);
+                      //  logData = String.format(logData, firstName, lastName, date, time, organization, email, blog, twitter, typeOfProposal, topicName, field, proposalAbstract, description, url);
 //                        Log.d(TAG, logData);
                         int id2 = id + i;
                         if (date.equals("") || firstName.equals("") || time.equals("") || topicName.equals("")) {
@@ -242,7 +282,7 @@ public class JsonToDatabase {
 
 
                     } catch (JSONException e) {
-                        Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
+                     //   Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
                     }
 
                 }
@@ -280,7 +320,7 @@ public class JsonToDatabase {
             @Override
             public void onResponse(String response) {
                 JSONArray jsonArray = removePaddingFromString(response);
-                Log.d(TAG, jsonArray.toString());
+              //  Log.d(TAG, jsonArray.toString());
                 String trackName;
                 String trackInformation;
 
@@ -292,10 +332,10 @@ public class JsonToDatabase {
                                 .getString("v");
                         String query = "INSERT INTO %s VALUES (%d, '%s', '%s');";
                         query = String.format(query, DatabaseHelper.TABLE_NAME_TRACK, i, StringUtils.replaceUnicode(trackName), StringUtils.replaceUnicode(trackInformation));
-                        Log.d(TAG, query);
+                       // Log.d(TAG, query);
                         queries.add(query);
                     } catch (JSONException e) {
-                        Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
+                      //  Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
                     }
 
                 }
@@ -328,7 +368,7 @@ public class JsonToDatabase {
             @Override
             public void onResponse(String response) {
                 JSONArray jsonArray = removePaddingFromString(response);
-                Log.d(TAG, jsonArray.toString());
+               // Log.d(TAG, jsonArray.toString());
                 String speaker;
                 String event;
 
@@ -343,7 +383,7 @@ public class JsonToDatabase {
 //                        Log.d(TAG, query);
                         queries.add(query);
                     } catch (JSONException e) {
-                        Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
+                  //      Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
                     }
 
                 }
@@ -377,7 +417,7 @@ public class JsonToDatabase {
             @Override
             public void onResponse(String response) {
                 JSONArray jsonArray = removePaddingFromString(response);
-                Log.d(TAG, jsonArray.toString());
+               // Log.d(TAG, jsonArray.toString());
                 String name;
                 String designation;
                 String profilePicUrl;
@@ -405,7 +445,7 @@ public class JsonToDatabase {
 //                        Log.d(TAG, temp.generateSqlQuery());
                         queries.add(temp.generateSqlQuery());
                     } catch (JSONException e) {
-                        Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse: " + response);
+               //         Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse: " + response);
                     }
 
                 }
@@ -453,7 +493,7 @@ public class JsonToDatabase {
 //            Log.d(TAG, jArray.toString());
             return jArray;
         } catch (JSONException e) {
-            Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
+           // Log.e(TAG, "JSON Error: " + e.getMessage() + "\nResponse" + response);
 
         }
 
