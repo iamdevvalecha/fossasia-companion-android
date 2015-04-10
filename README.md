@@ -16,6 +16,14 @@ All dependencies are defined in ```app/build.gradle```. Import the project in An
 
 The result apk file will be placed in ```app/build/outputs/apk/```.
 
+## Pending Task
+* Download schedule in a background thread
+* Notification for Bookmarked Events/Talks
+* IntegrateGoogle+ login or any other mechanism to fetch user email address [TBD](https://github.com/fossasia/fossasia-companion-android/issues/68)
+
+
+
+
 ## License
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
