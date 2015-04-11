@@ -19,7 +19,8 @@ The result apk file will be placed in ```app/build/outputs/apk/```.
 ## Pending Task
 * Download schedule in a background thread
 * Notification for Bookmarked Events/Talks
-* IntegrateGoogle+ login or any other mechanism to fetch user email address [TBD](https://github.com/fossasia/fossasia-companion-android/issues/68)
+* Integrate Google+ login or any other mechanism to fetch user email address [TBD](https://github.com/fossasia/fossasia-companion-android/issues/68)
+* Integrate Google Maps
 
 
 
