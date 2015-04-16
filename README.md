@@ -1,6 +1,9 @@
-# OPEN TECH Companion
+# FOSSASIA Companion
 
 
+OpenTech 
+-------
+OpenTech branch contains code development for Open Tech Companion App.
 
 ## How to build
 
