@@ -1,4 +1,4 @@
-# FOSSASIA Companion
+# OPEN TECH Companion
 
 
 ## How to build
