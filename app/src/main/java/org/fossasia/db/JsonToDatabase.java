@@ -80,7 +80,7 @@ public class JsonToDatabase {
                         temp = new Sponsor((i+1),name,img,url);
                         String ab = temp.generatesql();
                         queries.add(ab);
-                        Log.d(TAG,ab);
+                       // Log.d(TAG,ab);
                     }
                     catch ( JSONException e){
 
@@ -483,9 +483,11 @@ public class JsonToDatabase {
     }
 
     private JSONArray removePaddingFromString(String response) {
+        Log.d(TAG,"BEFORE: " + response);
         response = response.replaceAll("\"v\":null", "\"v\":\"\"");
         response = response.replaceAll("null", "{\"v\": \"\"}");
         response = response.substring(response.indexOf("(") + 1, response.length() - 2);
+        Log.d(TAG,"AFTER :::::::" + response);
         try {
             JSONObject jObj = new JSONObject(response);
             jObj = jObj.getJSONObject("table");
